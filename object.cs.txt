@@ -1,0 +1,24 @@
+namespace GetNestedValueByKey {
+    class Program {
+        static void Main(string[] args) {
+            static object GetNestedValueByKey(JObject obj, string key) {
+                var keys = key.Split('/');
+                JToken current = obj;
+                foreach(var k in keys) {
+                    current = current[k];
+                    if (current == null) return $ "Key {key} not exists";
+                }
+                return current;
+            }
+            /*Tests*/
+            JObject obj = JObject.Parse("{\"a\":{\"b\":{\"c\":\"d\"}}}");
+            var value = GetNestedValueByKey(obj, "a/b/c");
+            Console.WriteLine(value); // Output: "d"
+            obj = JObject.Parse("{\"x\":{\"y\":{\"z\":\"a\"}}}");
+            value = GetNestedValueByKey(obj, "x/y");
+            Console.WriteLine(value); // Output: { "z": "a" }
+            value = GetNestedValueByKey(obj, "k"); // key not exists in json
+            Console.WriteLine(value); // Output: Key k not exists
+        }
+    }
+}
